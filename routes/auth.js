@@ -181,7 +181,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
+  sameSite: "none",
   maxAge: 24 * 60 * 60 * 1000, // 1 day
 };
 

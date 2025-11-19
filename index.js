@@ -24,6 +24,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3002",
   "https://vnsrooms.onrender.com",
+  "https://vnsbackend.onrender.com",
 ];
 
 app.use(
