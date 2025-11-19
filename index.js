@@ -11,38 +11,34 @@ const path = require("path");
 
 console.log("3️⃣  Creating app...");
 const app = express();
+
 // -------------------- Middleware --------------------
 console.log("4️⃣  Applying middleware...");
-
 app.use(express.json({ limit: "40mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 app.use(cookieParser());
 
-// ✅ CORS Setup for Localhost + Render Frontend
+// ✅ SAFE CORS (prevents hanging)
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:3002",
-  "https://vnsrooms.onrender.com", // Your frontend deployed on Render
+  "https://vnsrooms.onrender.com",
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,          // Only allow these origins
-    credentials: true,               // Allow cookies / auth headers
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "X-Requested-With"
-    ],
-    exposedHeaders: ["Authorization"] // Optional: let frontend read auth headers
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("🚫 Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
-
-// Handle preflight requests for all routes
-app.options("*", cors());
 
 console.log("✅ CORS setup complete!");
 
